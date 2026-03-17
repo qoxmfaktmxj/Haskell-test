@@ -13,17 +13,27 @@ Typical flow:
 3. Inspect the result card and the generated AST block.
 4. If parsing or evaluation fails, read the error panel.
 
-## Screenshots (expected UI)
+## Screenshots
 
-![Expected UI](docs/ui-preview.svg)
+The screenshots below were captured from the running local app with the Playwright-based workflow from the sibling `auto-screenshot` repository.
 
-The shipped UI is intentionally small and clean:
+### Home screen
 
-- one input field
-- one evaluate button
-- a result panel
-- an error panel when parsing fails
-- an AST panel to show the parsed tree
+The landing view keeps the interface intentionally small: one input field, one action button, and a few sample expressions to help users try the parser immediately.
+
+![Home screen](docs/screenshots/calculator-home.png)
+
+### Successful evaluation
+
+After submitting `1 + 2 * (3 + 4)`, the UI shows the final value and the generated AST together so the parsing and evaluation flow is visible in one place.
+
+![Successful evaluation](docs/screenshots/calculator-result.png)
+
+### Error handling
+
+When evaluation fails, such as `10 / (5 - 5)`, the page renders a dedicated error panel while still exposing the AST for debugging and explanation.
+
+![Error handling](docs/screenshots/calculator-error.png)
 
 ## Tech stack
 
