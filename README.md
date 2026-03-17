@@ -1,53 +1,53 @@
 # haskell_calc_dsl
 
-Tiny arithmetic DSL in Haskell with a parser, AST evaluator, and a minimal browser UI.
+Haskell로 구현한 산술 표현식 DSL 파서, AST 평가기, 그리고 미니멀 웹 UI 프로젝트.
 
-## Demo explanation
+## 데모 설명
 
-`haskell_calc_dsl` starts a local web server, renders a small calculator page, and evaluates arithmetic expressions entered in the form. The server parses the input into an AST with `Megaparsec`, evaluates the tree with a separate evaluator module, and returns either the computed result or a human-readable error.
+`haskell_calc_dsl`은 로컬 웹 서버를 실행한 뒤 간단한 계산기 화면을 렌더링하고, 사용자가 입력한 산술 표현식을 파싱해서 계산 결과를 보여준다. 서버는 `Megaparsec`로 입력 문자열을 AST로 변환하고, 별도의 평가기 모듈에서 트리를 계산한 뒤 결과값 또는 사람이 읽기 쉬운 오류 메시지를 반환한다.
 
-Typical flow:
+기본 동작 흐름은 다음과 같다.
 
-1. Enter an expression such as `1 + 2 * (3 + 4)`.
-2. Submit the form.
-3. Inspect the result card and the generated AST block.
-4. If parsing or evaluation fails, read the error panel.
+1. `1 + 2 * (3 + 4)` 같은 표현식을 입력한다.
+2. 폼을 제출한다.
+3. 결과 카드와 생성된 AST 블록을 확인한다.
+4. 파싱 또는 평가에 실패하면 오류 패널을 확인한다.
 
-## Screenshots
+## 스크린샷
 
-The screenshots below were captured from the running local app with the Playwright-based workflow from the sibling `auto-screenshot` repository.
+아래 이미지는 옆 저장소인 `auto-screenshot`의 Playwright 기반 캡처 흐름으로, 실제 실행 중인 로컬 앱을 촬영한 결과다.
 
-### Home screen
+### 홈 화면
 
-The landing view keeps the interface intentionally small: one input field, one action button, and a few sample expressions to help users try the parser immediately.
+첫 화면은 의도적으로 단순하게 구성했다. 입력 필드 하나, 실행 버튼 하나, 그리고 바로 시도해 볼 수 있는 예시 표현식 몇 개만 배치해 파서 동작을 빠르게 확인할 수 있다.
 
-![Home screen](docs/screenshots/calculator-home.png)
+![홈 화면](docs/screenshots/calculator-home.png)
 
-### Successful evaluation
+### 정상 계산 예시
 
-After submitting `1 + 2 * (3 + 4)`, the UI shows the final value and the generated AST together so the parsing and evaluation flow is visible in one place.
+`1 + 2 * (3 + 4)`를 제출하면 최종 계산 결과와 생성된 AST를 함께 보여준다. 덕분에 파싱과 평가 흐름을 한 화면에서 확인할 수 있다.
 
-![Successful evaluation](docs/screenshots/calculator-result.png)
+![정상 계산 예시](docs/screenshots/calculator-result.png)
 
-### Error handling
+### 오류 처리 예시
 
-When evaluation fails, such as `10 / (5 - 5)`, the page renders a dedicated error panel while still exposing the AST for debugging and explanation.
+`10 / (5 - 5)`처럼 평가가 실패하는 입력이 들어오면 전용 오류 패널을 렌더링한다. 동시에 AST는 그대로 보여 주기 때문에 디버깅과 설명에 도움이 된다.
 
-![Error handling](docs/screenshots/calculator-error.png)
+![오류 처리 예시](docs/screenshots/calculator-error.png)
 
-## Tech stack
+## 기술 스택
 
 - Haskell
-- `Megaparsec` for parsing and operator precedence handling
-- `Scotty` for the lightweight local web server
-- `blaze-html` for server-side HTML rendering
-- `cabal` for build/run workflow
+- `Megaparsec`로 파싱 및 연산자 우선순위 처리
+- `Scotty`로 경량 로컬 웹 서버 구성
+- `blaze-html`로 서버 사이드 HTML 렌더링
+- `Stack` / `cabal`로 빌드 및 실행
 
-## Parser design explanation
+## 파서 설계 설명
 
 ### AST
 
-The core AST lives in `CalcDsl.Ast`:
+핵심 AST는 `CalcDsl.Ast` 모듈에 정의되어 있다.
 
 ```haskell
 data Expr
@@ -59,60 +59,60 @@ data Expr
     | Divide Expr Expr
 ```
 
-This keeps syntax representation explicit and makes evaluation independent from parsing.
+이 구조는 문법 표현을 명시적으로 유지해 주고, 평가 로직이 파서 구현 세부사항에 의존하지 않도록 분리해 준다.
 
-### Combinators
+### 파서 조합기
 
-`CalcDsl.Parser` uses `Megaparsec` and `makeExprParser` to model precedence and associativity:
+`CalcDsl.Parser`는 `Megaparsec`의 `makeExprParser`를 사용해 우선순위와 결합 방향을 구성한다.
 
-- prefix: unary minus
+- prefix: 단항 음수
 - multiplicative: `*`, `/`
 - additive: `+`, `-`
 
-Parentheses are parsed with a small `parens` combinator, and numbers are lexed with `megaparsec`'s lexer helpers. Because parsing only produces `Expr`, the evaluator never needs to know about raw source text.
+괄호는 작은 `parens` 조합기로 처리하고, 숫자는 `Megaparsec` lexer 헬퍼로 읽어들인다. 파서의 결과가 오직 `Expr` AST이기 때문에, 평가기는 원본 문자열 형식을 알 필요 없이 트리만 계산하면 된다.
 
-## Features
+## 주요 기능
 
-- Parses arithmetic expressions with precedence and parentheses
-- Builds a typed AST
-- Evaluates expressions in a dedicated evaluator module
-- Returns parse errors and division-by-zero errors separately
-- Shows both result and AST in a minimal web UI
-- Supports whitespace and unary negation
+- 연산자 우선순위와 괄호가 포함된 산술 표현식 파싱
+- 타입이 명확한 AST 생성
+- 전용 평가기 모듈에서 수식 계산
+- 파싱 오류와 0으로 나누기 오류를 분리해 처리
+- 최소한의 웹 UI에서 결과와 AST를 함께 표시
+- 공백과 단항 음수 입력 지원
 
-## How to run
+## 실행 방법
 
-### With stack
+### `stack`으로 실행
 
 ```bash
 stack run
 ```
 
-Then open [http://localhost:3000](http://localhost:3000).
+실행 후 [http://localhost:3000](http://localhost:3000)으로 접속하면 된다.
 
-### With cabal
+### `cabal`로 실행
 
-If you already have `cabal-install` and GHC available:
+이미 `cabal-install`과 GHC가 설치되어 있다면 다음처럼 실행할 수 있다.
 
 ```bash
 cabal update
 cabal run
 ```
 
-The project includes both a `.cabal` package definition and a generated `stack.yaml`.
+프로젝트에는 `.cabal` 패키지 정의와 생성된 `stack.yaml`이 함께 포함되어 있다.
 
-## Example expressions
+## 예시 표현식
 
 - `1 + 2 * (3 + 4)` -> `15`
 - `-8 + 3 * 2` -> `-2`
 - `(12 - 4) / 2` -> `4`
 - `7 / 3` -> `2.3333333333`
-- `10 / (5 - 5)` -> division-by-zero error
+- `10 / (5 - 5)` -> 0으로 나누기 오류
 
-## Future improvements
+## 향후 개선 아이디어
 
-- Add a JSON API endpoint alongside the HTML form
-- Extend the DSL with variables and let-bindings
-- Add property tests for parser/evaluator round-trips
-- Improve numeric rendering for repeating decimals
-- Add client-side progressive enhancement for live evaluation
+- HTML 폼과 함께 사용할 JSON API 엔드포인트 추가
+- 변수와 let-binding을 포함하도록 DSL 확장
+- 파서/평가기 round-trip을 위한 property test 추가
+- 순환 소수 표현을 더 잘 다루는 숫자 렌더링 개선
+- 실시간 계산을 위한 클라이언트 측 점진적 향상 추가
