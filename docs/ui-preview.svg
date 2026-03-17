@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="960" viewBox="0 0 1440 960" fill="none">
+  <rect width="1440" height="960" fill="#F5F7FB"/>
+  <circle cx="1140" cy="120" r="280" fill="#FFFFFF"/>
+  <rect x="340" y="120" width="760" height="700" rx="32" fill="#FFFFFF" stroke="#DBE4F0" stroke-width="2"/>
+  <text x="400" y="200" fill="#1363DF" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="2">HASKELL DSL</text>
+  <text x="400" y="255" fill="#122033" font-family="Segoe UI, Arial, sans-serif" font-size="48" font-weight="700">haskell_calc_dsl</text>
+  <text x="400" y="305" fill="#5D6B82" font-family="Segoe UI, Arial, sans-serif" font-size="24">Parse arithmetic expressions, inspect the AST, and evaluate the result.</text>
+  <text x="400" y="375" fill="#122033" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="600">Expression</text>
+  <rect x="400" y="396" width="640" height="64" rx="16" fill="#FFFFFF" stroke="#DBE4F0" stroke-width="2"/>
+  <text x="430" y="438" fill="#122033" font-family="Consolas, monospace" font-size="28">1 + 2 * (3 + 4)</text>
+  <rect x="400" y="490" width="180" height="62" rx="16" fill="#1363DF"/>
+  <text x="448" y="530" fill="white" font-family="Segoe UI, Arial, sans-serif" font-size="24" font-weight="700">Evaluate</text>
+  <rect x="400" y="590" width="640" height="110" rx="22" fill="#ECFDF3" stroke="#B7EBC6" stroke-width="2"/>
+  <text x="430" y="635" fill="#122033" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700">Result</text>
+  <text x="430" y="680" fill="#166534" font-family="Segoe UI, Arial, sans-serif" font-size="44" font-weight="700">15</text>
+  <rect x="400" y="724" width="640" height="64" rx="22" fill="#101828"/>
+  <text x="430" y="765" fill="#F8FAFC" font-family="Consolas, monospace" font-size="24">Add / Multiply / Number nodes shown here</text>
+</svg>

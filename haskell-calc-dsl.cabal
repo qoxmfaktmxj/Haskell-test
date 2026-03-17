@@ -1,0 +1,41 @@
+cabal-version:      3.8
+name:               haskell-calc-dsl
+version:            0.1.0.0
+synopsis:           Expression parser and evaluator with a minimal web UI
+description:        A small Haskell DSL project that parses arithmetic expressions,
+                    builds an AST, evaluates the result, and exposes a simple web UI.
+license:            MIT
+license-file:       LICENSE
+author:             Codex
+maintainer:         example@example.com
+category:           Web, Parsing
+build-type:         Simple
+extra-doc-files:    README.md
+
+common project-config
+    default-language: GHC2021
+    default-extensions: OverloadedStrings
+    ghc-options: -Wall
+    build-depends:
+        base >=4.18 && <5,
+        blaze-html >=0.9 && <0.10,
+        megaparsec >=9.6 && <10,
+        parser-combinators >=1.3 && <2,
+        scotty >=0.22 && <0.23,
+        text >=2.0 && <2.2
+
+library
+    import: project-config
+    hs-source-dirs: src
+    exposed-modules:
+        CalcDsl.Ast
+        CalcDsl.Evaluator
+        CalcDsl.Parser
+        CalcDsl.Web
+
+executable haskell_calc_dsl
+    import: project-config
+    hs-source-dirs: app
+    main-is: Main.hs
+    build-depends:
+        haskell-calc-dsl
